@@ -23,7 +23,10 @@ def new_dfo_structure(g_order):
         'post': queue.new_queue(),
         'reversepost': stack.new_stack()
     }
+
     dfo_structure["marked"] = map.new_map(
-        num_elements=g_order, load_factor=0.5
+        num_elements=g_order,
+        load_factor=0.5
     )
+
     return dfo_structure

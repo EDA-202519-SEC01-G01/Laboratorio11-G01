@@ -59,13 +59,22 @@ def print_menu():
     print("*******************************************")
 
 
+import time
+
 def option_two(cont):
     print("\nCargando información de transporte de singapur ....")
+    start = time.perf_counter()
+    
     logic.load_services(cont, servicefile)
+    
+    end = time.perf_counter()
+    elapsed = end - start
+
     numedges = logic.total_connections(cont)
     numvertex = logic.total_stops(cont)
     print('Numero de vertices: ' + str(numvertex))
     print('Numero de arcos: ' + str(numedges))
+    print(f"Tiempo de carga: {elapsed:.3f} segundos")
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
 
 
@@ -75,6 +84,7 @@ Menu principal
 
 
 def main():
+    cont = None  # inicializa aquí
     working = True
     while working:
         print_menu()
@@ -82,15 +92,19 @@ def main():
 
         if int(inputs[0]) == 1:
             print("\nInicializando....")
-            # cont es el controlador que se usará de acá en adelante
             cont = logic.init()
 
         elif int(inputs[0]) == 2:
-            option_two(cont)
-        else:
+            if cont is None:
+                print("Primero debes inicializar el analizador (opción 1).")
+            else:
+                option_two(cont)
+
+        elif int(inputs[0]) == 0:
             working = False
             print("Saliendo...")
     sys.exit(0)
+
 
 
 if __name__ == "__main__":

@@ -21,7 +21,6 @@ def new_vertex(key, value):
     :rtype: :ref:`vertex<graph-vertex>`
 
     .. include:: code-examples/Graph/vertex/new_vertex.rst
-
     """
     vertex = {"key": key, "value": value, "adjacents": mp.new_map(0, 0.5)}
     return vertex
@@ -117,10 +116,9 @@ def add_adjacent(vertex, key_vertex, weight):
     :rtype: :ref:`vertex<graph-vertex>`
 
     .. include:: code-examples/Graph/vertex/add_adjacent.rst
-
     """
     new_edge = edg.new_edge(key_vertex, weight)
-    vertex["adjacents"] = mp.put(vertex["adjacents"], key_vertex, new_edge)
+    mp.put(vertex["adjacents"], key_vertex, new_edge)  
     return vertex
 
 
