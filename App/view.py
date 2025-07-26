@@ -53,11 +53,17 @@ def print_menu():
     print("\n")
     print("*******************************************")
     print("Bienvenido")
-    print("1- Inicializar Analizador")
+    print("1- Iniciarizar Analizador")
     print("2- Cargar información de buses de singapur")
+    print("3- Calcular componentes conectados")
+    print("4- Establecer estación base:")
+    print("5- Hay camino entre estacion base y estación:")
+    print("6- Ruta de costo mínimo desde la estación base y estación:")
+    print("7- Estación que sirve a mas rutas:")
+    print("8- Existe un camino de busqueda entre la estación base y estación destino:")
+    print("9- Ruta de busqueda entre la estación base y estación destino:")
     print("0- Salir")
-    print("*******************************************")
-
+    print("***************************************")
 
 import time
 
@@ -76,6 +82,19 @@ def option_two(cont):
     print('Numero de arcos: ' + str(numedges))
     print(f"Tiempo de carga: {elapsed:.3f} segundos")
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
+
+def option_three(analyzer):
+    print("\nCalculando componentes fuertemente conectados...")
+    start = time.perf_counter()
+
+    scc_result = logic.connected_components(analyzer)
+    num_scc = logic.count_strongly_connected(analyzer)
+
+    end = time.perf_counter()
+    elapsed = end - start
+
+    print(f"Total de componentes fuertemente conectados: {num_scc}")
+    print(f"Tiempo de ejecución: {elapsed:.3f} segundos")
 
 
 """
@@ -100,10 +119,17 @@ def main():
             else:
                 option_two(cont)
 
+        elif int(inputs[0]) == 3:
+            if cont is None:
+                print("Primero debes inicializar el analizador (opción 1).")
+            else:
+                option_three(cont)  # debes definir esta función en view.py
+
         elif int(inputs[0]) == 0:
             working = False
             print("Saliendo...")
     sys.exit(0)
+
 
 
 

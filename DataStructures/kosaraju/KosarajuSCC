@@ -1,0 +1,62 @@
+# kosaraju.py
+from DataStructures.Map import map_linear_probing as map
+from DataStructures.Stack import stack
+from DataStructures.Graph import digraph as G
+from DataStructures.kosaraju import Kosaraju_SCC as kosaraju
+
+def kosaraju_scc(graph):
+    """
+    Ejecuta el algoritmo de Kosaraju para hallar componentes fuertemente conectados (CFC).
+    Retorna una estructura con la información de componentes.
+    """
+    reverse = G.reverse_graph(graph)
+    order = G.dfo_structure.depth_first_order(reverse)
+
+    marked = map.new_map(num_elements=G.order(graph), load_factor=0.5)
+    id_map = map.new_map(num_elements=G.order(graph), load_factor=0.5)
+    count = 0
+
+    while not stack.is_empty(order['reversepost']):
+        v = stack.pop(order['reversepost'])
+        if not map.contains(marked, v):
+            _dfs_scc(graph, v, marked, id_map, count)
+            count += 1
+
+    return {"marked": marked, "id": id_map, "count": count}
+
+def _dfs_scc(graph, v, marked, id_map, count):
+    stack_local = stack.new_stack()
+    stack.push(stack_local, v)
+    
+    while not stack.is_empty(stack_local):
+        vertex = stack.pop(stack_local)
+        if not map.contains(marked, vertex):
+            map.put(marked, vertex, True)
+            map.put(id_map, vertex, count)
+            for w in G.adjacents(graph, vertex):
+                if not map.contains(marked, w):
+                    stack.push(stack_local, w)
+
+def strongly_connected(kosaraju_result, v, w):
+    """
+    Verifica si dos vértices están en la misma CFC.
+    """
+    id_v = map.get(kosaraju_result['id'], v)
+    id_w = map.get(kosaraju_result['id'], w)
+    if id_v is None or id_w is None:
+        return False
+    return id_v['value'] == id_w['value']
+
+def count_scc(kosaraju_result):
+    """
+    Retorna el número total de componentes fuertemente conectados.
+    """
+    return kosaraju_result['count']
+
+def get_component_id(kosaraju_result, v):
+    """
+    Retorna el ID de componente al que pertenece el vértice v.
+    """
+    result = map.get(kosaraju_result['id'], v)
+    return result['value'] if result else None
+
